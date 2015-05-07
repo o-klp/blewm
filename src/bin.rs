@@ -35,4 +35,5 @@ pub fn main() {
     hash_one("Woods");
     hash_one("Woolfield");
     hash_one("Wull");
+    hash_one("Wull");
 }
