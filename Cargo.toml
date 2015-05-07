@@ -2,3 +2,11 @@
 name = "blewm"
 version = "0.1.0"
 authors = ["Keenan Lidral-Porter <klp2012@gmail.com>"]
+
+[lib]
+name = "mylib"
+path = "src/lib.rs"
+
+[[bin]]
+name = "mybin"
+path = "src/bin.rs"
