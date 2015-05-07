@@ -1,10 +1,9 @@
-pub fn hash_one(datum: &str) -> bool {
-    let v: Vec<u8> = "bors".bytes().collect();
-    println!("here be bytes {:?}", v);
-    println!("here be datum{:?}", datum);
-    true
+pub fn hash_one(datum: &str) -> u8 {
+    let nums: Vec<u8> = datum.bytes().collect();
+    println!("here be bytes {:?}", nums);
+    nums[0]
 }
 #[test]
 fn it_works() {
-    assert!(hash_one("atest"));
+    assert_eq!(hash_one("atest"), "atest".bytes().collect::<Vec<_>>()[0]);
 }
