@@ -4,70 +4,18 @@ use mylib::hash_one;
 use mylib::hash_two;
 
 pub fn main() {
-    hash_one("Amber");
-    hash_two("Amber");
-    hash_one("Bolton");
-    hash_two("Bolton");
-    hash_one("Condon");
-    hash_two("Condon");
-    hash_one("Dustin");
-    hash_two("Dustin");
-    hash_one("Forrester");
-    hash_two("Forrester");
-    hash_one("Greystark");
-    hash_two("Greystark");
-    hash_one("Harclay");
-    hash_two("Harclay");
-    hash_one("Ironsmith");
-    hash_two("Ironsmith");
-    hash_one("Karstark");
-    hash_two("Karstark");
-    hash_one("Lake");
-    hash_two("Lake");
-    hash_one("Marsh");
-    hash_two("Marsh");
-    hash_one("Norrey");
-    hash_two("Norrey");
-    hash_one("Overton");
-    hash_two("Overton");
-    hash_one("Peat");
-    hash_two("Peat");
-    hash_one("Pool");
-    hash_two("Pool");
-    hash_one("Quagg");
-    hash_two("Quagg");
-    hash_one("Redbeard");
-    hash_two("Redbeard");
-    hash_one("Reed");
-    hash_two("Reed");
-    hash_one("Ryswell");
-    hash_two("Ryswell");
-    hash_one("Slate");
-    hash_two("Slate");
-    hash_one("Stane");
-    hash_two("Stane");
-    hash_one("Stark");
-    hash_two("Stark");
-    hash_one("Stout");
-    hash_two("Stout");
-    hash_one("Thenn");
-    hash_two("Thenn");
-    hash_one("Umber");
-    hash_two("Umber");
-    hash_one("Waterman");
-    hash_two("Waterman");
-    hash_one("Wells");
-    hash_two("Wells");
-    hash_one("Whitehill");
-    hash_two("Whitehill");
-    hash_one("Woodfoot");
-    hash_two("Woodfoot");
-    hash_one("Woods");
-    hash_two("Woods");
-    hash_one("Woolfield");
-    hash_two("Woolfield");
-    hash_one("Wull");
-    hash_two("Wull");
-    hash_one("Wull");
-    hash_two("Wull");
+    let north_houses = [ 
+        "Amber" , "Bolton", "Condon", "Dustin", "Forrester", "Greystark",
+        "Harclay", "Ironsmith", "Karstark", "Lake", "Marsh", "Norrey",
+        "Overton", "Peat", "Pool", "Quagg", "Redbeard", "Reed", "Ryswell",
+        "Slate", "Stane", "Stark", "Stout", "Thenn", "Umber", "Waterman",
+        "Wells", "Whitehill", "Woodfoot", "Woods", "Woolfield", "Wull", "Wull" 
+    ];
+
+    for house in north_houses.iter() {
+        println!("and here at the turn I leave you bourden{:?} {:?}",
+                 house, hash_one(house));
+        println!("\t\tAngier?????????\t\t{:?} {:?}", house, hash_two(house));
+    }
 }
+

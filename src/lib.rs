@@ -27,8 +27,6 @@ pub fn hash_one(datum: &str) -> u8 {
             hashed_datum += *num as f32 * total_difference;
         }
     }
-    println!("and here at the turn I leave you bourden {:?} {:?} {:?}",
-             hashed_datum, hashed_datum as u8, datum);
     hashed_datum as u8
 }
 
@@ -46,7 +44,6 @@ pub fn hash_two(datum: &str) -> u8 {
     while hashed_datum.fract() != 0_f32 {
         hashed_datum = hashed_datum * 10_f32;
     }
-    println!("Angier? {:?} {:?} {:?}", hashed_datum, hashed_datum as u8, datum);
     hashed_datum as u8
 }
 
@@ -133,3 +130,4 @@ mod tests {
         b.iter(|| hash_two("The Professor"));
     }
 }
+
