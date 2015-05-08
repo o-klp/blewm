@@ -83,6 +83,19 @@ mod tests {
             northern_hash_one.push(hash_one(house));
             northern_hash_two.push(hash_two(house));
         }
+
+        // 33 elements and a range of 255 - a wise one once said a 'good' hash
+        // fn should have hmm... ~ (elements / range) collisions
+        // we'll sort the hashes, dedup, and expect a difference of 1
+        // (33 elements with 1 intentional duplicate - Wull)
+        northern_hash_one.sort_by(|a, b| a.cmp(b));
+        northern_hash_two.sort_by(|a, b| a.cmp(b));
+        northern_hash_one.dedup();
+        northern_hash_two.dedup();
+
+        assert_eq!(32, northern_hash_one.len());
+        assert_eq!(32, northern_hash_two.len());
+
     }
     #[bench]
     fn hash_one_bench(b: &mut Bencher) {
