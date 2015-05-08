@@ -1,5 +1,6 @@
 extern crate mylib;
 
+use mylib::hash_one;
 use mylib::hash_two;
 
 pub fn main() {

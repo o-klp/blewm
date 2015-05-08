@@ -1,3 +1,6 @@
+#![feature(test)]
+extern crate test;
+
 /// a good hashing function is well-distributed & deterministic
 /// to achieve those qualities, there can't be too many destructive operations
 /// (we want to avoid situations that trend to a certain range of values)
@@ -34,6 +37,7 @@ pub fn hash_two(datum: &str) -> u8 {
 
     // bit shift number 0-2 bits to left (yay ternary number system)
     // and add base 19 log of that^ to accumulator (hashed_datum)
+    let mut hashed_datum: f32;
     hashed_datum = nums.iter().fold(0_f32, |hashed_datum: f32, num| {
         let hash: u8 = *num << (hashed_datum as u8 % 3);
         hashed_datum + (hash as f32).log(19_f32)
@@ -42,11 +46,27 @@ pub fn hash_two(datum: &str) -> u8 {
     while hashed_datum.fract() != 0_f32 {
         hashed_datum = hashed_datum * 10_f32;
     }
-    println!("Angier? {:?} {:?}", hashed_datum, hashed_datum as u8);
+    println!("Angier? {:?} {:?} {:?}", hashed_datum, hashed_datum as u8, datum);
     hashed_datum as u8
 }
 
-#[test]
-fn it_works() {
-    assert_eq!(hash_two("atest"), "atest".bytes().collect::<Vec<_>>()[0]);
+#[cfg(test)]
+mod tests {
+    use super::hash_one;
+    use super::hash_two;
+    use test::Bencher;
+
+    #[test]
+    fn it_works() {
+        assert_eq!(hash_one("GreyStark"), 218);
+        assert_eq!(hash_two("Karstark"), 142);
+    }
+    #[bench]
+    fn hash_one_bench(b: &mut Bencher) {
+        b.iter(|| hash_one("Great Danton"));
+    }
+    #[bench]
+    fn hash_two_bench(b: &mut Bencher) {
+        b.iter(|| hash_two("The Professor"));
+    }
 }
