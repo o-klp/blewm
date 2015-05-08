@@ -58,6 +58,10 @@ mod tests {
 
     #[test]
     fn it_works() {
+        // yes I cheated
+        // to actually test one should add lots of test data, hash all
+        // and then check for collisions/distribution
+        // I'm doing that just manually - see src/bin.rs
         assert_eq!(hash_one("GreyStark"), 218);
         assert_eq!(hash_two("Karstark"), 142);
     }
