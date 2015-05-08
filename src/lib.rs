@@ -31,9 +31,19 @@ pub fn hash_one(datum: &str) -> u8 {
 
 pub fn hash_two(datum: &str) -> u8 {
     let nums: Vec<u8> = datum.bytes().collect();
-    println!("here be daturm {:?}", nums);
 
-    nums[0]
+    // bit shift number 0-2 bits to left (yay ternary number system)
+    // and add base 19 log of that^ to accumulator (hashed_datum)
+    hashed_datum = nums.iter().fold(0_f32, |hashed_datum: f32, num| {
+        let hash: u8 = *num << (hashed_datum as u8 % 3);
+        hashed_datum + (hash as f32).log(19_f32)
+    });
+
+    while hashed_datum.fract() != 0_f32 {
+        hashed_datum = hashed_datum * 10_f32;
+    }
+    println!("Angier? {:?} {:?}", hashed_datum, hashed_datum as u8);
+    hashed_datum as u8
 }
 
 #[test]
