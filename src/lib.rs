@@ -84,17 +84,44 @@ mod tests {
             northern_hash_two.push(hash_two(house));
         }
 
-        // 33 elements and a range of 255 - a wise one once said a 'good' hash
-        // fn should have hmm... ~ (elements / range) collisions
-        // we'll sort the hashes, dedup, and expect a difference of 1
-        // (33 elements with 1 intentional duplicate - Wull)
+        // 33 elements and a range of 255 - a "well distributed" hash function
+        // would hash one element every interval of 7.73
+        // To test distribution we'll sort the  hashed values
         northern_hash_one.sort_by(|a, b| a.cmp(b));
         northern_hash_two.sort_by(|a, b| a.cmp(b));
+
+        // & check there's a *relatively* consistent difference b/w elements
+        // The better the hashing fn the smaller the interval
+        // Let's start with 5 < x < 10 as the range - %30 away from "ideal"
+        // ( 7.73 ± 2.27 )
+        {
+            let mut iter = northern_hash_one.iter().peekable();
+            while let Some(num) = iter.next() {
+                if iter.peek() != None {
+                    let difference: u8 = *iter.peek().unwrap() - *num;
+                    assert!(difference >= 5 || difference <= 10);
+                }
+            }
+        }
+        {
+            let mut iter = northern_hash_two.iter().peekable();
+            while let Some(num) = iter.next() {
+                if iter.peek() != None {
+                    let difference: u8 = *iter.peek().unwrap() - *num;
+                    assert!(difference >= 5 || difference <= 10);
+                }
+            }
+        }
+
+        // to test for collisions we'll dedup and expect a difference of <= 2,
+        // or 3% (33 elements with 1 intentional duplicate - Wull)
+        let northern_one_len: usize = northern_hash_one.len();
+        let northern_two_len: usize = northern_hash_two.len();
         northern_hash_one.dedup();
         northern_hash_two.dedup();
 
-        assert_eq!(32, northern_hash_one.len());
-        assert_eq!(32, northern_hash_two.len());
+        assert!(northern_one_len - northern_hash_one.len() <= 2);
+        assert!(northern_two_len - northern_hash_two.len() <= 2);
 
     }
     #[bench]
