@@ -28,7 +28,15 @@ pub fn hash_one(datum: &str) -> u8 {
              hashed_datum, hashed_datum as u8, datum);
     hashed_datum as u8
 }
+
+pub fn hash_two(datum: &str) -> u8 {
+    let nums: Vec<u8> = datum.bytes().collect();
+    println!("here be daturm {:?}", nums);
+
+    nums[0]
+}
+
 #[test]
 fn it_works() {
-    assert_eq!(hash_one("atest"), "atest".bytes().collect::<Vec<_>>()[0]);
+    assert_eq!(hash_two("atest"), "atest".bytes().collect::<Vec<_>>()[0]);
 }
