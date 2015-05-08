@@ -59,11 +59,30 @@ mod tests {
     #[test]
     fn it_works() {
         // yes I cheated
-        // to actually test one should add lots of test data, hash all
-        // and then check for collisions/distribution
-        // I'm doing that just manually - see src/bin.rs
-        assert_eq!(hash_one("GreyStark"), 218);
+        // to actually test one should add lots of test data, hash it
+        // then check for collisions/distribution
+        // see below...
+
+        assert_eq!(hash_one("Greystark"), 218);
         assert_eq!(hash_two("Karstark"), 142);
+    }
+    #[test]
+    fn it_actually_works() {
+        let north_houses = [
+            "Amber" , "Bolton", "Condon", "Dustin", "Forrester",
+            "Greystark", "Harclay", "Ironsmith", "Karstark", "Lake", "Marsh",
+            "Norrey", "Overton", "Peat", "Pool", "Quagg", "Redbeard", "Reed",
+            "Ryswell", "Slate", "Stane", "Stark", "Stout", "Thenn", "Umber",
+            "Waterman", "Wells", "Whitehill", "Woodfoot", "Woods", "Woolfield",
+            "Wull", "Wull"
+            ];
+        let mut northern_hash_one = Vec::new();
+        let mut northern_hash_two = Vec::new();
+
+        for house in north_houses.iter() {
+            northern_hash_one.push(hash_one(house));
+            northern_hash_two.push(hash_two(house));
+        }
     }
     #[bench]
     fn hash_one_bench(b: &mut Bencher) {
