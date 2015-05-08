@@ -58,12 +58,12 @@ mod tests {
 
     #[test]
     fn it_works() {
-        // yes I cheated
-        // to actually test one should add lots of test data, hash it
-        // then check for collisions/distribution
-        // see below...
+        // yes I cheated. well, this tests if fn is deterministic
+        // see it_actually_works for more tests...
 
         assert_eq!(hash_one("Greystark"), 218);
+        assert_eq!(hash_one("Greystark"), 218);
+        assert_eq!(hash_two("Karstark"), 142);
         assert_eq!(hash_two("Karstark"), 142);
     }
     #[test]
