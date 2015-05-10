@@ -153,7 +153,6 @@ mod tests {
         assert!(northern_one_len - northern_hash_one.len() <= 2);
         assert!(northern_two_len - northern_hash_two.len() <= 2);
         assert!(northern_three_len - northern_hash_three.len() <= 2);
-
     }
     #[bench]
     fn hash_one_bench(b: &mut Bencher) {
