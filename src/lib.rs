@@ -46,6 +46,18 @@ pub fn hash_two(datum: &str) -> u8 {
     }
     hashed_datum as u8
 }
+pub fn hash_three(datum: &str) -> u8 {
+    let nums: Vec<u8> = datum.bytes().collect();
+
+    // convert to radians
+    let mut hashed_datum: f32 = nums.iter().fold(0_f32, |hash: f32, num| {
+        hash * (num as f32).to_radians().sin()
+    // trig-it
+    // pwf
+    // multiple
+
+    nums[0]
+}
 
 #[cfg(test)]
 mod tests {
