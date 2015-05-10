@@ -52,16 +52,14 @@ pub fn hash_three(datum: &str) -> u8 {
     let nums: Vec<u8> = datum.bytes().collect();
 
     // convert to radians
-    // taking sin will reduce num from 0 < x < 2π
-    // add some spice by raising to tan of a value
+    // taking sin will map num to 0 < x < 2π
+    // add some spice by ^(tan(rad))
     // then overflow it and return as u8 (real magic of the fn)
     let mut hashed_datum: f32 = nums.iter().fold(1_f32, |hash: f32, num| {
         let rad: f32 = (*num as f32).to_radians();
         hash * (rad.sin()).powf(rad.tan())
     });
-    while hashed_datum.fract() != 0_f32 {
-        hashed_datum *= 10_f32;
-    }
+    hashed_datum *= 255_f32;
     hashed_datum as u8
 }
 
@@ -81,8 +79,8 @@ mod tests {
         assert_eq!(hash_one("Greystark"), 218);
         assert_eq!(hash_two("Karstark"), 142);
         assert_eq!(hash_two("Karstark"), 142);
-        assert_eq!(hash_three("Stark"), 218);
-        assert_eq!(hash_three("Stark"), 218);
+        assert_eq!(hash_three("Stark"), 194);
+        assert_eq!(hash_three("Stark"), 194);
     }
     #[test]
     fn it_actually_works() {
