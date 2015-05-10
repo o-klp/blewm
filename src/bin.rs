@@ -14,10 +14,10 @@ pub fn main() {
     ];
 
     for house in north_houses.iter() {
-        //println!("and here at the turn I leave you bourden{:?} {:?}",
-        //         house, hash_one(house));
-        //println!("\t\tAngier?????????\t\t{:?} {:?}", house, hash_two(house));
-        println!("langford double {:?} {:?}", house, hash_three(house));
+        println!("and here at the turn I leave you bourden{:?} {:?}",
+                 house, hash_one(house));
+        println!("\t\tAngier?????????\t\t{:?} {:?}", house, hash_two(house));
+        println!("\t\t\tlangford double {:?} {:?}", house, hash_three(house));
     }
 }
 
