@@ -1,4 +1,5 @@
 #![feature(test)]
+#![feature(std_misc)]
 extern crate test;
 
 /// a good hashing function is well-distributed & deterministic
@@ -46,23 +47,29 @@ pub fn hash_two(datum: &str) -> u8 {
     }
     hashed_datum as u8
 }
+
 pub fn hash_three(datum: &str) -> u8 {
     let nums: Vec<u8> = datum.bytes().collect();
 
     // convert to radians
-    let mut hashed_datum: f32 = nums.iter().fold(0_f32, |hash: f32, num| {
-        hash * (num as f32).to_radians().sin()
-    // trig-it
-    // pwf
-    // multiple
-
-    nums[0]
+    // taking sin will reduce num from 0 < x < 2π
+    // add some spice by raising to tan of a value
+    // then overflow it and return as u8 (real magic of the fn)
+    let mut hashed_datum: f32 = nums.iter().fold(1_f32, |hash: f32, num| {
+        let rad: f32 = (*num as f32).to_radians();
+        hash * (rad.sin()).powf(rad.tan())
+    });
+    while hashed_datum.fract() != 0_f32 {
+        hashed_datum *= 10_f32;
+    }
+    hashed_datum as u8
 }
 
 #[cfg(test)]
 mod tests {
     use super::hash_one;
     use super::hash_two;
+    use super::hash_three;
     use test::Bencher;
 
     #[test]
@@ -74,6 +81,8 @@ mod tests {
         assert_eq!(hash_one("Greystark"), 218);
         assert_eq!(hash_two("Karstark"), 142);
         assert_eq!(hash_two("Karstark"), 142);
+        assert_eq!(hash_three("Stark"), 218);
+        assert_eq!(hash_three("Stark"), 218);
     }
     #[test]
     fn it_actually_works() {
