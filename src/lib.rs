@@ -63,6 +63,54 @@ pub fn hash_three(datum: &str) -> u8 {
     hashed_datum as u8
 }
 
+pub struct Bloom<'a> {     
+    pub filter: Vec<u8>,   
+    pub data: Vec<&'a str>,
+}
+
+// insert a string value into the data store                    
+pub fn insert<'a>(string: &'a str, bloom: &mut Bloom<'a>) -> usize {
+    let index_1: usize = hash_one(string) as usize;             
+    let index_2: usize = hash_two(string) as usize;             
+    let index_3: usize = hash_three(string) as usize;           
+
+    bloom.filter[index_1] = 1;                                  
+    bloom.filter[index_2] = 1;                                  
+    bloom.filter[index_3] = 1;                                  
+
+    bloom.data.push(string);                                    
+    bloom.data.len()                                            
+}                                                               
+
+// query if there is a *chance* data store has string value
+pub fn query(string: &str, bloom: &mut Bloom) -> bool {        
+    let index_1: usize = hash_one(string) as usize;        
+    let index_2: usize = hash_two(string) as usize;        
+    let index_3: usize = hash_three(string) as usize;      
+
+    if bloom.filter[index_1] == 0 {                        
+    return false;                                      
+    }                                                      
+    if bloom.filter[index_2] == 0 {                        
+    return false;                                      
+    }                                                      
+    if bloom.filter[index_3] == 0 {                        
+    return false;                                      
+    }                                                      
+    true                                                   
+}                                                          
+
+// check if data store *actually* contains string value    
+pub fn contains(string: &str, bloom: &mut Bloom) -> bool {     
+    if query(string, bloom) {                              
+    if !bloom.data.contains(&string) {                 
+    panic!("False positive!!");                    
+    }                                                  
+    return true;                                       
+    }                                                      
+    false                                                  
+}                                                          
+
 #[cfg(test)]
 mod tests {
     use super::hash_one;
