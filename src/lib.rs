@@ -92,7 +92,7 @@ impl<'a> Bloom<'a> {
     fn query(&self, string: &str) -> bool {
         let index_1: usize = hash_one(string) as usize;
         let index_2: usize = hash_two(string) as usize;
-        let index_3: usize = hash_three(string) as usize
+        let index_3: usize = hash_three(string) as usize;
 
         if self.filter[index_1] == 0 {
             return false;
