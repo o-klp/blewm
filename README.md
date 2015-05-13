@@ -1,22 +1,20 @@
- ##bloom filter
+##bloom filter
 
-Basic bloom filter with `.insert()` & `.contains` methods. A bloom filter sits
+Basic bloom filter with `.insert()` & `.contains()` methods. A bloom filter sits
 ontop of a data store and tells you the possibility that an element is actually
 contained in the data store. A good bloom filter does this with very low false
-positive rates. This one is pretty bad ~30%
+positive rates. False positive rate depends on the size of the bloom filter
+See `approximating rate`
 
-There may be a few explanations for this:
-The size of a bloom filter should probably be much much larger
-than the amount of elements the data store will ever hold at one time. This
-bloom filter is only 255 in length because the simple hashing functions used
-are of size u8. That's another possibility for so many false positives. The
-hashing functions are probably not that great, they just seem well-distributed
-because they're returned as u8 (~ % 255).
+`src/bin.rs` creates a bloom filter of length 1000 and inserts 105 records with
+a 0% false-positive rate (there is 1 intentional duplicate).
 
 ### approximating rate
-This is a m=255 k=3 bloom filter
+This is a m = x, k = 3 bloom filter
 (where m is available slots and k is hashing functions)
 Approximation for bloom filters is `(1- e^(-kn/m))^k)`
-Tests insert 105 elements, so (1 - e^(-315/255)) ^ 3) yields ~ 35%
-This would suggest the hash fn's aren't *that* bad but that m is too small for
-the given n
+
+`src/bin.rs` insert 105 elements, so `(1 - e^(-315/1000)) ^ 3)` yields ~ 2%
+A smaller size would lead to a *much* greater false positive rate
+(Inserting 105 elements into bloom filter with m = 255 lead to ~30% false
+positive rate)
