@@ -59,8 +59,9 @@ pub fn main() {
         } else {
             if result.unwrap() {
                 duplicates += 1;
+            } else {
+                println!("don't have a - {:?}", name);
             }
-            println!("don't have a- {:?}", name);
         }
     }
 
