@@ -7,7 +7,7 @@ extern crate test;
 /// (we want to avoid situations that trend to a certain range of values)
 /// and must reduce (fold) to take advantage of a string's uniqueness
 /// hash_one will take the difference
-pub fn hash_one(datum: &str) -> u8 {
+pub fn hash_one(datum: &str, max: u32) -> u32 {
     let nums: Vec<u8> = datum.bytes().collect();
     // we'll multiply each byte by the difference b/w it and the next byte
     // (as a decimal) and then clear out the decimals
@@ -28,10 +28,10 @@ pub fn hash_one(datum: &str) -> u8 {
             hashed_datum += *num as f32 * total_difference;
         }
     }
-    hashed_datum as u8
+    (hashed_datum.abs() as u32) % max
 }
 
-pub fn hash_two(datum: &str) -> u8 {
+pub fn hash_two(datum: &str, max: u32) -> u32 {
     let nums: Vec<u8> = datum.bytes().collect();
 
     // bit shift number 0-2 bits to left (yay ternary number system)
@@ -45,10 +45,10 @@ pub fn hash_two(datum: &str) -> u8 {
     while hashed_datum.fract() != 0_f32 {
         hashed_datum = hashed_datum * 10_f32;
     }
-    hashed_datum as u8
+    (hashed_datum.abs() as u32) % max
 }
 
-pub fn hash_three(datum: &str) -> u8 {
+pub fn hash_three(datum: &str, max: u32) -> u32 {
     let nums: Vec<u8> = datum.bytes().collect();
 
     // convert to radians
@@ -59,8 +59,10 @@ pub fn hash_three(datum: &str) -> u8 {
         let rad: f32 = (*num as f32).to_radians();
         hash * (rad.sin()).powf(rad.tan())
     });
-    hashed_datum *= 255_f32;
-    hashed_datum as u8
+    while hashed_datum.fract() != 0_f32 {
+        hashed_datum *= 10_f32;
+    }
+    (hashed_datum.abs() as u32) % max
 }
 
 #[derive(Debug)]
@@ -76,9 +78,10 @@ pub struct Bloom<'a> {
 impl<'a> Bloom<'a> {
     // insert a string value into the data store
     pub fn insert(&mut self, string: &'a str) -> usize {
-        let index_1: usize = hash_one(string) as usize;
-        let index_2: usize = hash_two(string) as usize;
-        let index_3: usize = hash_three(string) as usize;
+        let max: u32 = self.filter.len() as u32;
+        let index_1: usize = hash_one(string, max as u32) as usize;
+        let index_2: usize = hash_two(string, max as u32) as usize;
+        let index_3: usize = hash_three(string, max as u32) as usize;
 
         self.filter[index_1] = 1;
         self.filter[index_2] = 1;
@@ -90,9 +93,10 @@ impl<'a> Bloom<'a> {
 
     // query if there is a *chance* data store has string value
     fn query(&self, string: &str) -> bool {
-        let index_1: usize = hash_one(string) as usize;
-        let index_2: usize = hash_two(string) as usize;
-        let index_3: usize = hash_three(string) as usize;
+        let max: u32 = self.filter.len() as u32;
+        let index_1: usize = hash_one(string, max) as usize;
+        let index_2: usize = hash_two(string, max) as usize;
+        let index_3: usize = hash_three(string, max) as usize;
 
         if self.filter[index_1] == 0 {
             return false;
@@ -130,12 +134,12 @@ mod hash_tests {
         // yes I cheated. well, this tests if fn is deterministic
         // see it_actually_works for more tests...
 
-        assert_eq!(hash_one("Greystark"), 218);
-        assert_eq!(hash_one("Greystark"), 218);
-        assert_eq!(hash_two("Karstark"), 142);
-        assert_eq!(hash_two("Karstark"), 142);
-        assert_eq!(hash_three("Stark"), 194);
-        assert_eq!(hash_three("Stark"), 194);
+        assert_eq!(hash_one("Greystark", 255_u32), 218);
+        assert_eq!(hash_one("Greystark", 255_u32), 218);
+        assert_eq!(hash_two("Karstark", 255_u32), 142);
+        assert_eq!(hash_two("Karstark", 255_u32), 142);
+        assert_eq!(hash_three("Stark", 255_u32), 194);
+        assert_eq!(hash_three("Stark", 255_u32), 194);
     }
     #[test]
     fn it_actually_works() {
@@ -152,9 +156,9 @@ mod hash_tests {
         let mut northern_hash_three = Vec::new();
 
         for house in north_houses.iter() {
-            northern_hash_one.push(hash_one(house));
-            northern_hash_two.push(hash_two(house));
-            northern_hash_three.push(hash_three(house));
+            northern_hash_one.push(hash_one(house, 255_u32));
+            northern_hash_two.push(hash_two(house, 255_u32));
+            northern_hash_three.push(hash_three(house, 255_u32));
         }
 
         // 33 elements and a range of 255 - a "well distributed" hash function
@@ -211,15 +215,15 @@ mod hash_tests {
     }
     #[bench]
     fn hash_one_bench(b: &mut Bencher) {
-        b.iter(|| hash_one("Great Danton"));
+        b.iter(|| hash_one("Great Danton", 255_u32));
     }
     #[bench]
     fn hash_two_bench(b: &mut Bencher) {
-        b.iter(|| hash_two("The Professor"));
+        b.iter(|| hash_two("The Professor", 255_u32));
     }
     #[bench]
     fn hash_three_bench(b: &mut Bencher) {
-        b.iter(|| hash_three("Cutter"));
+        b.iter(|| hash_three("Cutter", 255_u32));
     }
 }
 

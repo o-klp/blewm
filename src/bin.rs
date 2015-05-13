@@ -4,7 +4,7 @@ use mylib::Bloom;
 
 pub fn main() {
     let mut bloom = Bloom {
-        filter: vec![0; 255],
+        filter: vec![0; 1000],
         data: Vec::new(),
     };
 
