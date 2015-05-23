@@ -1,12 +1,11 @@
 #![feature(test)]
 #![feature(std_misc)]
 extern crate test;
+extern crate KLPhash;
 
-mod hash;
-
-use hash::hash_one;
-use hash::hash_two;
-use hash::hash_three;
+use KLPhash::hash_one;
+use KLPhash::hash_two;
+use KLPhash::hash_three;
 
 #[derive(Debug)]
 pub enum LookupError {
